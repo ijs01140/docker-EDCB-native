@@ -1,4 +1,4 @@
-FROM ubuntu:24.04 AS Builder
+FROM ubuntu:24.04 AS builder
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && \
@@ -35,13 +35,13 @@ RUN apt-get update && \
         rm -rf /var/lib/apt/lists/*
 
 # copy EDCB
-COPY --from=Builder /usr/local/bin /usr/local/bin
-COPY --from=Builder /usr/local/lib/edcb /usr/local/lib/edcb
+COPY --from=builder /usr/local/bin /usr/local/bin
+COPY --from=builder /usr/local/lib/edcb /usr/local/lib/edcb
 
 # copy EMWUI
-COPY --from=Builder /tmp/EDCB_Material_WebUI/HttpPublic /var/local/edcb/HttpPublic
-COPY --from=Builder /tmp/EDCB_Material_WebUI/Setting /var/local/edcb/Setting
+COPY --from=builder /tmp/EDCB_Material_WebUI/HttpPublic /var/local/edcb/HttpPublic
+COPY --from=builder /tmp/EDCB_Material_WebUI/Setting /var/local/edcb/Setting
 
 # copy BonDriver
-COPY --from=Builder /tmp/BonDriver_LinuxMirakc/BonDriver_LinuxMirakc.so /var/local/edcb/
-COPY --from=Builder /tmp/BonDriver_LinuxMirakc/BonDriver_LinuxMirakc.so.ini_sample /var/local/edcb/BonDriver_LinuxMirakc.so.ini
+COPY --from=builder /tmp/BonDriver_LinuxMirakc/BonDriver_LinuxMirakc.so /var/local/edcb/
+COPY --from=builder /tmp/BonDriver_LinuxMirakc/BonDriver_LinuxMirakc.so.ini_sample /var/local/edcb/BonDriver_LinuxMirakc.so.ini
