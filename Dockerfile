@@ -6,7 +6,7 @@ RUN apt-get update && \
         build-essential \
         make gcc g++ \
         liblua5.2-dev lua-zlib \
-        git
+        git ca-certificates
 
 WORKDIR /tmp
 # download EMWUI
