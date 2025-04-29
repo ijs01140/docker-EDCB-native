@@ -31,8 +31,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         lua-zlib && \
-        apt-get clean && \
-        rm -rf /var/lib/apt/lists/*
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # copy EDCB
 COPY --from=builder /usr/local/bin /usr/local/bin
