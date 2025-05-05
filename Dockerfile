@@ -62,5 +62,6 @@ COPY --from=builder /tmp/BonDriver_LinuxMirakc/BonDriver_LinuxMirakc.so.ini_samp
 
 # copy Lua
 COPY --from=builder /tmp/lua-5.2-luabinaries/liblua5.2.so /usr/local/lib/
-RUN ldconfig
+RUN ln -sf /usr/local/lib/liblua5.2.so /usr/local/lib/liblua5.2.so.0 && \
+    ldconfig
 COPY --from=builder /tmp/lua-zlib-0.5-lua52/libzlib52.so /usr/local/lib/lua/5.2/
