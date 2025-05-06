@@ -16,7 +16,9 @@ RUN git clone https://github.com/EMWUI/EDCB_Material_WebUI.git
 RUN git clone https://github.com/xtne6f/EDCB.git && \
     cd EDCB/Document/Unix && \
     make -j$(nproc) && \
-    make install
+    make install && \
+    mkdir /var/local/edcb && \
+    make setup_ini
 
 WORKDIR /tmp
 # build BonDriver
