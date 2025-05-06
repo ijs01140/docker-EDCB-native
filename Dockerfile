@@ -43,6 +43,7 @@ RUN apt-get update && \
 # copy EDCB
 COPY --from=builder /usr/local/bin /usr/local/bin
 COPY --from=builder /usr/local/lib/edcb /usr/local/lib/edcb
+COPY --from=builder /var/local/edcb /var/local/edcb
 
 # copy EMWUI
 COPY --from=builder /tmp/EDCB_Material_WebUI/HttpPublic /var/local/edcb/HttpPublic
