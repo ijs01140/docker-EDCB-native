@@ -31,7 +31,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-        lua-zlib && \
+        liblua5.2-0 lua-zlib && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
