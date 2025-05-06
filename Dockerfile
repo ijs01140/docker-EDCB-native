@@ -10,7 +10,10 @@ RUN apt-get update && \
 
 WORKDIR /tmp
 # download EMWUI
-RUN git clone https://github.com/EMWUI/EDCB_Material_WebUI.git
+RUN git clone https://github.com/EMWUI/EDCB_Material_WebUI.git && \
+    rm -rf EDCB_Material_WebUI/.git && \
+    rm -rf EDCB_Material_WebUI/LICENSE && \
+    rm -f EDCB_Material_WebUI/README.md
 
 # build EDCB
 RUN git clone https://github.com/xtne6f/EDCB.git && \
