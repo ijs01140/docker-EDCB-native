@@ -52,4 +52,6 @@ COPY --from=builder /tmp/EDCB_Material_WebUI/Setting /var/local/edcb/Setting
 
 # copy BonDriver
 COPY --from=builder /tmp/BonDriver_LinuxMirakc/BonDriver_LinuxMirakc.so /var/local/edcb/
+COPY --from=builder /tmp/BonDriver_LinuxMirakc/BonDriver_LinuxMirakc.so /var/local/edcb/BonDriver_LinuxMirakc_T.so
+COPY --from=builder /tmp/BonDriver_LinuxMirakc/BonDriver_LinuxMirakc.so /var/local/edcb/BonDriver_LinuxMirakc_S.so
 COPY --from=builder /tmp/BonDriver_LinuxMirakc/BonDriver_LinuxMirakc.so.ini_sample /var/local/edcb/BonDriver_LinuxMirakc.so.ini
