@@ -43,7 +43,8 @@ RUN apt-get update && \
 # copy EDCB
 COPY --from=builder /usr/local/bin /usr/local/bin
 COPY --from=builder /usr/local/lib/edcb /usr/local/lib/edcb
-COPY --from=builder /var/local/edcb /var/local/edcb
+# legacy WEBUIからの設定変更を許可する
+RUN sed -i -e 's/^ALLOW_SETTING=.*/ALLOW_SETTING=true/' /var/local/edcb/HttpPublic/legacy/util.lua
 
 # copy EMWUI
 COPY --from=builder /tmp/EDCB_Material_WebUI/HttpPublic /var/local/edcb/HttpPublic
