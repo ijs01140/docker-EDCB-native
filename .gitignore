@@ -2,3 +2,15 @@
 /mirakurun/conf/*
 !.gitkeep
 compose.yaml
+/KonomiTV/*
+!/KonomiTV/config.yaml.sample
+!/KonomiTV/server/
+/KonomiTV/server/data/*
+!/KonomiTV/server/data/account-icons/
+/KonomiTV/server/data/account-icons/*
+!/KonomiTV/server/data/account-icons/.gitkeep
+!/KonomiTV/server/data/thumbnails/
+/KonomiTV/server/data/thumbnails/*
+!/KonomiTV/server/data/thumbnails/.gitkeep
+/KonomiTV/server/logs/*
+!/KonomiTV/server/logs/.gitkeep
