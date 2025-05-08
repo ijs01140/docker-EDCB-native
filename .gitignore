@@ -1,3 +1,4 @@
 /mirakurun/data/*
 /mirakurun/conf/*
 !.gitkeep
+compose.yaml

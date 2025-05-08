@@ -1,0 +1,123 @@
+services:
+  mirakurun:
+    image: ijs01140/mirakurun
+    container_name: Mirakurun
+    cap_add:
+      - SYS_ADMIN
+      - SYS_NICE
+    ports:
+      - "40772:40772"
+      - "9229:9229"
+    volumes:
+      - type: bind
+        source: './mirakurun/conf'
+        target: '/app-config'
+      - type: bind
+        source: './mirakurun/data'
+        target: '/app-data'
+    environment:
+      TZ: "Asia/Tokyo"
+    devices:
+      - /dev/bus:/dev/bus
+      - /dev/pt3video0:/dev/pt3video0
+      - /dev/pt3video1:/dev/pt3video1
+      - /dev/pt3video2:/dev/pt3video2
+      - /dev/pt3video3:/dev/pt3video3
+      - /dev/px4video0:/dev/px4video0
+      - /dev/px4video1:/dev/px4video1
+      - /dev/px4video2:/dev/px4video2
+      - /dev/px4video3:/dev/px4video3
+    restart: always
+    logging:
+      driver: json-file
+      options:
+        max-file: "1"
+        max-size: 10m
+
+  edcb:
+    container_name: EDCB
+    build:
+      context: .
+    restart: always
+    # ネットワークをホスト側と共有する
+    # 標準の bridge モード (仮想ネットワーク) だと localhost との通信が面倒
+    network_mode: host
+    volumes:
+      - type: bind
+        source: './EDCB/BonDriver/BonDriver_LinuxMirakc.so.ini'
+        target: '/var/local/edcb/BonDriver_LinuxMirakc.so.ini'
+      - type: bind
+        source: './EDCB/BonDriver/BonDriver_LinuxMirakc.so.ini'
+        target: '/var/local/edcb/BonDriver_LinuxMirakc_T.so.ini'
+      - type: bind
+        source: './EDCB/BonDriver/BonDriver_LinuxMirakc.so.ini'
+        target: '/var/local/edcb/BonDriver_LinuxMirakc_S.so.ini'
+      - type: bind
+        source: './EDCB/EpgTimerSrv.ini'
+        target: '/var/local/edcb/EpgTimerSrv.ini'
+      - type: bind
+        source: '/mnt/'
+        target: '/mnt/'
+
+  # web-bml:
+  #   image: ijs01140/web-bml
+  #   container_name: web-bml
+  #   environment:
+  #     MIRAK_URL: http://mirakurun:40772
+  #     TZ: "Asia/Tokyo"
+  #   depends_on:
+  #     - mirakurun
+  #   ports:
+  #     - "23234:23234"
+  #   restart: always
+
+  konomitv:
+    image: ghcr.io/tsukumijima/konomitv:latest
+    container_name: KonomiTV
+    depends_on:
+      - mirakurun
+      - edcb
+    # OS 起動時にコンテナを自動起動
+    restart: always
+    # ネットワークをホスト側と共有する
+    # 標準の bridge モード (仮想ネットワーク) だと、ローカルホストとの通信が面倒
+    # ref: https://inocop.hatenablog.com/entry/2018/12/18/131526
+    network_mode: host
+    # ボリュームのマウント設定
+    # /host-rootfs/ はコンテナ内の KonomiTV からホストマシンのファイルを読み書きするために必要
+    volumes:
+      - type: bind
+        source: './KonomiTV/config.yaml'
+        target: '/code/config.yaml'
+      - type: bind
+        source: './KonomiTV/server/data/'
+        target: '/code/server/data/'
+      - type: bind
+        source: './KonomiTV/server/logs/'
+        target: '/code/server/logs/'
+      - type: bind
+        source: '/'
+        target: '/host-rootfs/'
+
+    # ==================== ↓↓↓↓↓ ここからユーザー設定 ↓↓↓↓↓ ====================
+
+    # QSVEncC / VCEEncC を利用する (Intel Graphics / AMD GPU にアクセスする) ために必要な設定
+    # VCEEncC (AMD GPU) を利用するには、別途 AMDGPU-PRO Driver のインストールが必要です。
+    # GPU が1個も搭載されていない (/dev/dri/ 以下のデバイスファイルが存在しない) 特殊な環境では、
+    # コメントアウトしてこの設定を無効にしないと、KonomiTV サーバーを起動できなくなります。
+    devices:
+      - '/dev/dri/:/dev/dri/'
+
+    # NVEncC を利用する (NVIDIA GPU にアクセスする) ために必要な設定
+    # NVEncC (NVIDIA GPU) を利用するには、別途 NVIDIA Graphics Driver と
+    # NVIDIA Container Toolkit (nvidia-docker2) のインストールが必要です。
+    # コメントアウトを解除してこの設定を有効にすると、NVIDIA GPU が搭載されていない環境では KonomiTV サーバーを起動できなくなります。
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           capabilities: [compute, utility, video]
+
+    # ==================== ↑↑↑↑↑ ここまでユーザー設定 ↑↑↑↑↑ ====================
+
